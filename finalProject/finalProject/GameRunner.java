@@ -22,7 +22,7 @@ public class GameRunner extends PApplet {
 	
 	Force forceToAdd;
 	
-	Obstacle ob;
+	Target target;
 	
 	private final double deltaTime = 0.02;
 	
@@ -44,8 +44,10 @@ public class GameRunner extends PApplet {
 		
 		mainScreen = true;
 		
-		ob = new Obstacle(this, 200, 300, 200, 100);
-		obs.add(ob);
+		
+		obs.add(new Obstacle(this, 200, 300, 200, 100));
+		
+		target = new Target(this, 500, 200, 100, 100);
 		
 	}
 	
@@ -55,6 +57,7 @@ public class GameRunner extends PApplet {
 			image(background, 0, 0);
 			
 			player.drawSelf();
+			target.drawSelf();
 			
 			drawObs();
 			printForces();
@@ -138,6 +141,10 @@ public class GameRunner extends PApplet {
 				System.out.println("Collision Detected");
 			}
 		}
+		if (target.isInside((int) player.x, (int) player.y, 
+					player.width, player.height)) {
+				System.out.println("Winner");
+			}
 	}
 	
 	private void drawLines() {
