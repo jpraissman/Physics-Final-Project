@@ -1,6 +1,7 @@
 package finalProject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -24,6 +25,12 @@ public class GameRunner extends PApplet {
 	
 	Target target;
 	
+	int level = 1;
+	
+	String mapOne = "";
+	String mapTwo = "75x100x650x625";
+	String mapThree = "75x25x300x300/75x425x300x300/475x100x250x625";
+	
 	private final double deltaTime = 0.02;
 	
 	double time = 0;
@@ -40,14 +47,13 @@ public class GameRunner extends PApplet {
 		background = loadImage("assets/background.jpg");
 		background.resize(750, 750);
 		
-		player = new Player(this, 0, 200, 50, 50);
+		player = new Player(this, 10, 690, 50, 50);
 		
 		mainScreen = true;
 		
+		target = new Target(this, 660, 10, 75, 75);
 		
-		obs.add(new Obstacle(this, 200, 300, 200, 100));
-		
-		target = new Target(this, 500, 200, 100, 100);
+		generateMap(mapOne);
 		
 	}
 	
@@ -56,8 +62,8 @@ public class GameRunner extends PApplet {
 		if (mainScreen) {
 			image(background, 0, 0);
 			
-			player.drawSelf();
 			target.drawSelf();
+			player.drawSelf();
 			
 			drawObs();
 			printForces();
@@ -93,7 +99,9 @@ public class GameRunner extends PApplet {
 				player.y += (player.ySpeed * deltaTime) + (0.5 * yAcc * deltaTime * deltaTime);
 				player.ySpeed += yAcc * deltaTime;
 				
-				if (time >= 10) {
+				System.out.println(player.xSpeed);
+				
+				if (time >= 60) {
 					simulating = false;
 				}
 			}
@@ -138,13 +146,32 @@ public class GameRunner extends PApplet {
 		for (Obstacle ob : obs) {
 			if(ob.intersecting((int) player.x, (int) player.y, 
 					player.width, player.height)) {
-				System.out.println("Collision Detected");
+				reset();
+				generateMap(mapOne);
+				level = 1;
 			}
 		}
 		if (target.isInside((int) player.x, (int) player.y, 
-					player.width, player.height)) {
-				System.out.println("Winner");
+					player.width, player.height) && 
+				Math.abs(player.xSpeed) < 1 && Math.abs(player.ySpeed) < 1) {
+				reset();
+				level++;
+				if (level == 2)
+					generateMap(mapTwo);
+				if (level == 3)
+					generateMap(mapThree);
+				
 			}
+	}
+	
+	private void reset() {
+		simulating = false;
+		obs = new ArrayList<Obstacle>();
+		player.x = 10;
+		player.y = 690;
+		player.xSpeed = 0;
+		player.ySpeed = 0;
+		forces = new ArrayList<Force>();
 	}
 	
 	private void drawLines() {
@@ -183,7 +210,18 @@ public class GameRunner extends PApplet {
 	}
 	
 	private void generateMap(String input) {
+		String[] obsRaw = input.split("/");
 		
+		for (String obRaw : obsRaw) {
+			if (!obRaw.equals("")) {
+				String[] obArr = obRaw.split("x");
+				int x = Integer.parseInt(obArr[0]);
+				int y = Integer.parseInt(obArr[1]);
+				int width = Integer.parseInt(obArr[2]);
+				int height = Integer.parseInt(obArr[3]);
+				obs.add(new Obstacle(this, x, y, width, height));
+			}
+		}
 	}
 	
 	public void keyReleased() {
