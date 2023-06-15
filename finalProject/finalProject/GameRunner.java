@@ -182,6 +182,10 @@ public class GameRunner extends PApplet {
 		
 	}
 	
+	private void generateMap(String input) {
+		
+	}
+	
 	public void keyReleased() {
 		if (mainScreen) {
 			if (keyCode == 70) { //F key
