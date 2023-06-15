@@ -196,7 +196,7 @@ public class GameRunner extends PApplet {
 		textSize(20);
 		text("Forces", 850, 20);
 		
-		int xPos = 775;
+		int xPos = 755;
 		int yPos = 50;
 		int count = 1;
 		
