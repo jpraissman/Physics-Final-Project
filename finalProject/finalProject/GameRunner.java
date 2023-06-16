@@ -9,7 +9,7 @@ import processing.net.Client;
 
 public class GameRunner extends PApplet {
 	
-	PImage background, joinScreen, forceScreen;
+	PImage background, joinScreen, forceScreen, winScreen, loseScreen;
 	
 	Player player;
 	
@@ -62,6 +62,9 @@ public class GameRunner extends PApplet {
 		joinScreen = loadImage("assets/join.png");
 		
 		forceScreen = loadImage("assets/addForce.png");
+		winScreen = loadImage("assets/win.png");
+		loseScreen = loadImage("assets/lose.png");
+		
 		//For testing
 		joiningScreen =false;
 		mainScreen = true;
