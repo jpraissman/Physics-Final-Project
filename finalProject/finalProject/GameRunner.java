@@ -64,9 +64,11 @@ public class GameRunner extends PApplet {
 		joinScreen = loadImage("assets/join.png");
 
 		forceScreen = loadImage("assets/addForce.png");
+		
 		//For testing
-		joiningScreen =false;
-		mainScreen = true;
+//		joiningScreen =false;
+//		mainScreen = true;
+//		generateMap(map6);
 		
 		target = new Target(this, 660, 10, 75, 75);
 	}
@@ -94,7 +96,7 @@ public class GameRunner extends PApplet {
 		else if (losingScreen) {
 			textSize(30);
 			fill(0);
-			text("Losing", 100, 100);
+			text("Losing Screen", 100, 100);
 		}
 		else if (mainScreen) {
 			image(background, 0, 0);
@@ -208,6 +210,9 @@ public class GameRunner extends PApplet {
 				if (level >= 4) {
 					winningScreen = true;
 					mainScreen = false;
+					for (int i = 0; i < 10; i++) {
+						myClient.write("Game Over\n");
+					}
 				}
 				else
 					selectMap();
@@ -327,8 +332,14 @@ public class GameRunner extends PApplet {
 	
 	public void keyReleased() {
 		//For Testing
-		if (keyCode == 81)
-			level = 3;
+		if (keyCode == 81) {
+			winningScreen = true;
+			mainScreen = false;
+			for (int i = 0; i < 10; i++) {
+				myClient.write("Game Over\n");
+			}
+		}
+			
 		
 		
 		if (joiningScreen) {

@@ -14,6 +14,7 @@ public class ServerRunner extends PApplet {
 	int numPlayers = 0;
 	
 	boolean gameStarted = false;
+	boolean gameOver = false;
 	
 	String ipAddress;
 	
@@ -44,7 +45,7 @@ public class ServerRunner extends PApplet {
 	
 	public void draw() {
 		background(255);
-		if (!gameStarted) {
+		if (!gameStarted && !gameOver) {
 			fill(0);
 			textSize(20);
 			text("Number of Players: " + numPlayers, 65, 75);
@@ -54,7 +55,12 @@ public class ServerRunner extends PApplet {
 		else if (gameStarted) {
 			text("Game In Progress", 75, 150);
 			thisClient = myServer.available();
-			readClientData();
+			if (thisClient != null)
+				readClientData();
+		}
+		else if (gameOver) {
+			text("Game Over", 100, 150);
+			myServer.write("Game Over\n");
 		}
 		
 	}
@@ -67,7 +73,10 @@ public class ServerRunner extends PApplet {
 		String dataFromClient = thisClient.readString();
 		if (dataFromClient != null) {
 			String[] dataFromClientSeperated = dataFromClient.split("\n");
-//			bDirection = dataFromClientSeperated[0];
+			if (dataFromClientSeperated[0].equals("Game Over")) {
+				gameStarted = false;
+				gameOver = true;
+			}
 		}
 	}
 	
