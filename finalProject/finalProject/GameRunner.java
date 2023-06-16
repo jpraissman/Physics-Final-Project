@@ -69,8 +69,8 @@ public class GameRunner extends PApplet {
 		waitScreen = loadImage("assets/wait.png");
 		
 		//For testing
-		joiningScreen =false;
-		mainScreen = true;
+//		joiningScreen =false;
+//		mainScreen = true;
 		
 		target = new Target(this, 660, 10, 75, 75);
 	}
