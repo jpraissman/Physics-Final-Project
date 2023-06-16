@@ -8,7 +8,7 @@ import processing.net.Client;
 
 public class GameRunner extends PApplet {
 	
-	PImage background, joinScreen;
+	PImage background, joinScreen, forceScreen;
 	
 	Player player;
 	
@@ -62,12 +62,11 @@ public class GameRunner extends PApplet {
 			
 		joiningScreen = true;
 		joinScreen = loadImage("assets/join.png");
-		
-//		//For testing
-//		joiningScreen =false;
-//		mainScreen = true;
-//		generateMap(map6);
-		
+
+		forceScreen = loadImage("assets/addForce.png");
+		//For testing
+		joiningScreen =false;
+		mainScreen = true;
 		
 		target = new Target(this, 660, 10, 75, 75);
 	}
@@ -150,31 +149,37 @@ public class GameRunner extends PApplet {
 				System.out.println("Y speed: " + player.ySpeed);
 			}
 		}
-		else if (addForce1) {
-			fill(0);
-			textSize(30);
-			text("Enter Force Magnitude (0-10 N):      " + whatUserTyped, 300, 350);
-			text("Click Space When Done.", 350, 500);
+		else if (addForce1 || addForce2 || addForce3 || addForce4)
+		{
+			image(forceScreen,0,0);
+			if (addForce1) {
+				fill(0);
+				textSize(30);
+				text(whatUserTyped, 400, 250);
+			}
+			else if (addForce2) {
+				fill(0);
+				textSize(30);
+				text(forceToAdd.getMagnitude()+"", 400, 250);
+				text(whatUserTyped, 400, 360);
+			}
+			else if (addForce3) {
+				fill(0);
+				textSize(30);
+				text(forceToAdd.getMagnitude()+"", 400, 250);
+				text(forceToAdd.getStart()+"", 400, 360);
+				text(whatUserTyped, 400, 470);
+			}
+			else if (addForce4) {
+				fill(0);
+				textSize(30);
+				text(forceToAdd.getMagnitude()+"", 400, 250);
+				text(forceToAdd.getStart()+"", 400, 360);
+				text(forceToAdd.getEnd()+"", 400, 470);
+				text(whatUserTyped, 400, 580);
+			}
 		}
-		else if (addForce2) {
-			fill(0);
-			textSize(30);
-			text("Enter Force Start Time (s):      " + whatUserTyped, 300, 350);
-			text("Click Space When Done.", 350, 500);
-		}
-		else if (addForce3) {
-			fill(0);
-			textSize(30);
-			text("Enter Force End Time (s):      " + whatUserTyped, 300, 350);
-			text("Click Space When Done.", 350, 500);
-		}
-		else if (addForce4) {
-			fill(0);
-			textSize(30);
-			text("Enter Force Direction (1 is up, 2 is down, 3 is left, 4 is right):   " + 
-					whatUserTyped, 100, 350);
-			text("Click Space When Done.", 350, 500);
-		}
+		
 		
 		
 	}
@@ -328,6 +333,7 @@ public class GameRunner extends PApplet {
 		
 		if (joiningScreen) {
 			System.out.println(keyCode);
+
 			if (keyCode == 32) {
 				joiningScreen = false;
 				waitingScreen = true;
@@ -339,7 +345,9 @@ public class GameRunner extends PApplet {
 			else
 				whatUserTyped += key;
 		}
-		else if (mainScreen) {
+		
+		else if (mainScreen)
+		{
 			if (keyCode == 70) { //F key
 				addForce1 = true;
 				mainScreen = false;
@@ -354,8 +362,11 @@ public class GameRunner extends PApplet {
 				forces = new ArrayList<Force>();
 			}
 		}
-		else if (addForce1 || addForce2 || addForce3 || addForce4) {
-			if (keyCode == 32) {
+		
+		else if (addForce1 || addForce2 || addForce3)
+		{
+			if (keyCode == 10)
+			{
 				if (addForce1) {
 					addForce1 = false;
 					addForce2 = true;
@@ -373,15 +384,11 @@ public class GameRunner extends PApplet {
 					addForce4 = true;
 					forceToAdd.endTime = Double.parseDouble(whatUserTyped);
 					whatUserTyped = "";
-				}
-				else if (addForce4) {
-					addForce4 = false;
-					forceToAdd.direction = Integer.parseInt(whatUserTyped);
-					whatUserTyped = "";
-					forces.add(forceToAdd);
-					mainScreen = true;
+					System.out.println("here" + addForce4);
+
 				}
 			}
+			
 			else if (keyCode == 8 && whatUserTyped.length() >= 1) {
 				whatUserTyped = whatUserTyped.substring(0, whatUserTyped.length() - 1);
 			}
@@ -390,6 +397,33 @@ public class GameRunner extends PApplet {
 			}
 		}
 		
+		else if (addForce4 && (keyCode == 37 || keyCode == 38 || keyCode == 39 || keyCode == 40))
+		{
+			System.out.println("raaa" + addForce4);
+			if(keyCode==37)
+			{
+				forceToAdd.direction = 3;
+				System.out.println("left");
+			}
+			else if(keyCode==38)
+			{
+				forceToAdd.direction =1;
+			}
+			else if (keyCode == 39)
+			{
+				forceToAdd.direction =4;
+			}
+			else if (keyCode == 40)
+			{
+				forceToAdd.direction =2;
+			}
+				addForce4 = false;
+				whatUserTyped = "";
+				forces.add(forceToAdd);
+				mainScreen = true;
+		}
+			
+			
 		
 	}
 	
