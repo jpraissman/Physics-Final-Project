@@ -34,6 +34,8 @@ public class GameRunner extends PApplet {
 	String mapOne = "";
 	String mapTwo = "75x100x650x625";
 	String mapThree = "75x25x300x300/75x425x300x300/475x100x250x625";
+	String mapFour = "70x10x580x350/70x425x580x280";
+	String mapFive = "70x500x580x225/70x10x580x200";
 	
 	private final double deltaTime = 0.02;
 	
@@ -55,11 +57,13 @@ public class GameRunner extends PApplet {
 		
 		player = new Player(this, 10, 690, 50, 50);
 		
-		homeScreen = true;
+//		homeScreen = true;
+	
+		mainScreen = true;
 		
 		target = new Target(this, 660, 10, 75, 75);
 		
-		generateMap(mapOne);
+		generateMap(mapFive);
 		
 	}
 	
@@ -119,7 +123,7 @@ public class GameRunner extends PApplet {
 				player.y += (player.ySpeed * deltaTime) + (0.5 * yAcc * deltaTime * deltaTime);
 				player.ySpeed += yAcc * deltaTime;
 				
-				System.out.println(player.xSpeed);
+				System.out.println(player.ySpeed);
 				
 				if (time >= 60) {
 					simulating = false;
@@ -198,11 +202,11 @@ public class GameRunner extends PApplet {
 		if (mousePressed && !simulating) {
 			stroke(100);
 			strokeWeight(4);
-			line((int) player.x, (int) player.y, mouseX, (int) player.y);
+			line((int) player.x + 50, (int) player.y, mouseX, (int) player.y);
 			line(mouseX, (int) player.y, mouseX, mouseY);
 			fill(255);
 			textSize(15);
-			text((int) mouseX - (int) player.x, ((int) mouseX + (int) player.x)/2, 
+			text((int) mouseX - (int) player.x - 50, ((int) mouseX + (int) player.x + 50)/2, 
 					(int) player.y - 10);
 			text(Math.abs((int) mouseY - (int) player.y), mouseX + 10, 
 					((int) mouseY + (int) player.y)/2);
