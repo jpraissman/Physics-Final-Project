@@ -28,4 +28,19 @@ public class Force {
 		else
 			return "Right";
 	}
+	
+	public double getMagnitude()
+	{
+		return magnitude;
+	}
+	
+	public double getStart()
+	{
+		return startTime;
+	}
+	
+	public double getEnd()
+	{
+		return endTime;
+	}
 }
