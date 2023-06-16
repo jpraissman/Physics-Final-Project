@@ -10,7 +10,6 @@ public class Home extends PApplet
 	public static void main(String[] args)
 	{
 		PApplet.main("finalProject.Home");
-
 	}
 	
 	public void settings() {
@@ -43,7 +42,7 @@ public class Home extends PApplet
 				}
 				else
 				{
-					System.out.println("multiplayer");
+					PApplet.main("finalProject.GameRunner");
 				}
 			}
 			else if (mouseY >= 490 && mouseY <= 600 && mouseX >= 155 && mouseX <= 840)
@@ -55,6 +54,7 @@ public class Home extends PApplet
 				else
 				{
 					System.out.println("song");
+					link("http://www.processing.org");
 				}		
 			}
 		}

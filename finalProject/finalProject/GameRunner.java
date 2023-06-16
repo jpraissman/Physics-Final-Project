@@ -9,11 +9,11 @@ import processing.net.Client;
 
 public class GameRunner extends PApplet {
 	
-	PImage background, homeBackground;
+	PImage background, joinScreen;
 	
 	Player player;
 	
-	boolean homeScreen, mainScreen, addForce1, addForce2, 
+	boolean mainScreen, addForce1, addForce2, 
 		addForce3, addForce4, simulating, joiningScreen, waitingScreen;
 	
 	boolean mousePressed;
@@ -41,9 +41,9 @@ public class GameRunner extends PApplet {
 	
 	double time = 0;
 	
-	public static void main(String[] args) {
-		PApplet.main("finalProject.GameRunner");
-	}
+//	public static void main(String[] args) {
+//		PApplet.main("finalProject.GameRunner");
+//	}
 	
 	public void settings() {
 		size(1000, 750);
@@ -52,14 +52,11 @@ public class GameRunner extends PApplet {
 	public void setup() {
 		background = loadImage("assets/background.jpg");
 		background.resize(750, 750);
-		
-		homeBackground = loadImage("assets/Home.png");
-		
+				
 		player = new Player(this, 10, 690, 50, 50);
-		
-//		homeScreen = true;
-	
-		mainScreen = true;
+			
+		joiningScreen = true;
+		joinScreen = loadImage("assets/join.png");
 		
 		target = new Target(this, 660, 10, 75, 75);
 		
@@ -69,14 +66,12 @@ public class GameRunner extends PApplet {
 	
 	public void draw() {
 		background(123, 125, 101);
-		if (homeScreen) {
-			image(homeBackground, 0, 0);
-		}
-		else if (joiningScreen) {
+		
+		if (joiningScreen) {
+			image(joinScreen, 0, 0);
 			textSize(30);
 			fill(0);
-			text("Enter IP Address: " + whatUserTyped, 100, 100);
-			text("Press Space To Join", 100, 400);
+			text(whatUserTyped, 375, 355);
 		}
 		else if (waitingScreen) {
 			textSize(30);
@@ -256,7 +251,7 @@ public class GameRunner extends PApplet {
 				waitingScreen = true;
 				myClient = new Client(this, whatUserTyped, 8888);
 			}
-			else if (keyCode == 8) {
+			else if (keyCode == 8 && whatUserTyped.length() >= 1) {
 				whatUserTyped = whatUserTyped.substring(0, whatUserTyped.length() - 1);
 			}
 			else
@@ -316,22 +311,12 @@ public class GameRunner extends PApplet {
 		
 	}
 	
+	public void mouseClicked()
+	{
+		int col = get(mouseX, mouseY);
+		System.out.println(col + ": " + mouseX +", " + mouseY);
+	}
 	public void mousePressed() {
-		if (homeScreen) {
-			System.out.println(mouseX+", " +mouseY);
-			
-			if (mouseX > 347 && mouseX < 650 && mouseY < 354 && mouseY > 278)
-				System.out.println("Single Player");
-			else if (mouseX > 347 && mouseX < 650 && mouseY < 469 && mouseY > 394) {
-				joiningScreen = true;
-				homeScreen = false;
-			}
-			else if (mouseX > 176 && mouseX < 479 && mouseY < 583 && mouseY > 506)
-				System.out.println("Tutorial");
-			else if (mouseX > 519 && mouseX < 823 && mouseY < 583 && mouseY > 506)
-				System.out.println("Music");
-		}
-			
 		if (mainScreen)
 			mousePressed = true;
 	}
