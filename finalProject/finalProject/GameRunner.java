@@ -42,9 +42,9 @@ public class GameRunner extends PApplet {
 	
 	double time = 0;
 	
-//	public static void main(String[] args) {
-//		PApplet.main("finalProject.GameRunner");
-//	}
+	public static void main(String[] args) {
+		PApplet.main("finalProject.GameRunner");
+	}
 	
 	public void settings() {
 		size(1000, 750);
@@ -59,9 +59,13 @@ public class GameRunner extends PApplet {
 		joiningScreen = true;
 		joinScreen = loadImage("assets/join.png");
 		
+		//For testing
+		joiningScreen =false;
+		mainScreen = true;
+		
 		target = new Target(this, 660, 10, 75, 75);
 		
-		generateMap(mapSix);
+		generateMap(mapTwo);
 		
 	}
 	
