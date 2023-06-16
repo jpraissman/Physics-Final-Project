@@ -35,7 +35,8 @@ public class GameRunner extends PApplet {
 	String mapTwo = "75x100x650x625";
 	String mapThree = "75x25x300x300/75x425x300x300/475x100x250x625";
 	String mapFour = "70x10x580x350/70x425x580x280";
-	String mapFive = "70x500x580x225/70x10x580x200";
+	String mapFive = "70x10x50x425/110x490x50x225";
+	String mapSix = "65x625x100x45/75x725x650x20";
 	
 	private final double deltaTime = 0.02;
 	
@@ -60,7 +61,7 @@ public class GameRunner extends PApplet {
 		
 		target = new Target(this, 660, 10, 75, 75);
 		
-		generateMap(mapFive);
+		generateMap(mapSix);
 		
 	}
 	
