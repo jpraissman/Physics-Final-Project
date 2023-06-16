@@ -5,12 +5,13 @@ import processing.core.PImage;
 
 public class Home extends PApplet
 {
-	PImage background;
+	PImage background, helpScreen;
+	
+	boolean help;
 	
 	public static void main(String[] args)
 	{
 		PApplet.main("finalProject.Home");
-
 	}
 	
 	public void settings() {
@@ -20,19 +21,33 @@ public class Home extends PApplet
 	public void setup()
 	{
 		background = loadImage("assets/Home.png");
-		image(background, 0, 0);
+		helpScreen = loadImage("assets/helpp.png");
+		help = false;
 	}
 	
 	public void draw()
 	{
-		
+		if(help)
+		{
+			image(helpScreen, 0, 0);
+		}
+		else
+		{
+			image(background, 0, 0);
+		}
 	}
 	
 	public void mouseClicked()
 	{
+		if((mouseX > 285 && mouseX < 365 && mouseY > 520 && mouseY < 566) && !help)
+			help = true;
+		if(help)
+		{
+			help = false;
+		}
 		int col = get(mouseX, mouseY);
 		System.out.println(col + ": " + mouseX +", " + mouseY);
-		if((col == -1 || col == -16711936))
+		if((col == -1 || col == -16711936 || col == 2097185))
 		{
 			if(mouseX >= 330 && mouseX <= 660 && mouseY >= 260 && mouseY <= 485)
 			{
@@ -43,18 +58,19 @@ public class Home extends PApplet
 				}
 				else
 				{
-					System.out.println("multiplayer");
+					PApplet.main("finalProject.GameRunner");
 				}
 			}
 			else if (mouseY >= 490 && mouseY <= 600 && mouseX >= 155 && mouseX <= 840)
 			{
 				if(mouseX <= 500)
 				{
-					System.out.println("tutorial");
+					help = true;
 				}
 				else
 				{
 					System.out.println("song");
+					link("http://www.processing.org");
 				}		
 			}
 		}
