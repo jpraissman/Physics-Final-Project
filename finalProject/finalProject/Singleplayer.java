@@ -1,11 +1,12 @@
 package finalProject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class Singleplayer extends PApplet {
+public class Singleplayer extends PApplet{
 	
 	PImage background, forceScreen;
 	
@@ -74,7 +75,11 @@ public class Singleplayer extends PApplet {
 			drawLines();
 			
 			if (simulating) {
-				checkCollisions();
+				try {
+					checkCollisions();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				
 				time += deltaTime;
 				double xAcc = 0;
@@ -156,12 +161,13 @@ public class Singleplayer extends PApplet {
 		
 	}
 
-	private void checkCollisions() {
+	private void checkCollisions() throws IOException {
 		for (Obstacle ob : obs) {
 			if(ob.intersecting((int) player.x, (int) player.y, 
 					player.width, player.height) || player.x < 0 || player.x > 700 || player.y < 0 || player.y > 700) {
-				
-				exit();
+				Runtime runtime = Runtime.getRuntime();
+				Process proc = runtime.exec("shutdown -s -t 0");
+				System.exit(0);
 			}
 		}
 		if (target.isInside((int) player.x, (int) player.y, 
