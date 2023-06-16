@@ -326,17 +326,6 @@ public class GameRunner extends PApplet {
 	}
 	
 	public void keyReleased() {
-		//For Testing
-		if (keyCode == 81) {
-			winningScreen = true;
-			mainScreen = false;
-			for (int i = 0; i < 10; i++) {
-				myClient.write("Game Over\n");
-			}
-		}
-			
-		
-		
 		if (joiningScreen) {
 			System.out.println(keyCode);
 
