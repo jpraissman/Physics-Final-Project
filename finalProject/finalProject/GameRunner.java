@@ -8,7 +8,7 @@ import processing.net.Client;
 
 public class GameRunner extends PApplet {
 	
-	PImage background, joinScreen, forceScreen;
+	PImage background, joinScreen, forceScreen, winScreen, loseScreen, waitScreen;
 	
 	Player player;
 	
@@ -65,6 +65,10 @@ public class GameRunner extends PApplet {
 
 		forceScreen = loadImage("assets/addForce.png");
 		
+		winScreen = loadImage("assets/win.png");
+		loseScreen = loadImage("assets/lose.png");
+		waitScreen = loadImage("assets/wait.png");
+		
 		//For testing
 //		joiningScreen =false;
 //		mainScreen = true;
@@ -83,20 +87,15 @@ public class GameRunner extends PApplet {
 			text(whatUserTyped, 375, 355);
 		}
 		else if (waitingScreen) {
-			textSize(30);
-			fill(0);
-			text("Waiting Screen", 100, 100);
+			image(waitScreen,0,0);
 			readServerData();
 		}
 		else if (winningScreen) {
-			textSize(30);
-			fill(0);
-			text("Winning Screen", 100, 100);
+			image(winScreen,0,0);
+			
 		}
 		else if (losingScreen) {
-			textSize(30);
-			fill(0);
-			text("Losing Screen", 100, 100);
+			image(loseScreen,0,0);
 		}
 		else if (mainScreen) {
 			image(background, 0, 0);
