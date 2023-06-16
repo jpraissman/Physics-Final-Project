@@ -355,5 +355,11 @@ public class Singleplayer extends PApplet{
 		if (mainScreen)
 			mousePressed = false;
 	}
+	
+	public void exitActual()
+	{
+		System.out.println("no");
+		PApplet.main("finalProject.Singleplayer");
+	}
 
 }

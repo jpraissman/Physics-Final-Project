@@ -7,7 +7,7 @@ public class Home extends PApplet
 {
 	PImage background, helpScreen;
 	
-	boolean help;
+	boolean help, noFriends = false;
 	
 	public static void main(String[] args)
 	{
@@ -53,8 +53,10 @@ public class Home extends PApplet
 			{
 				if(mouseY < 375)
 				{
+					noFriends = true;
+//					System.out.println("here");
+
 					PApplet.main("finalProject.Singleplayer");
-					
 				}
 				else
 				{
@@ -75,5 +77,13 @@ public class Home extends PApplet
 			}
 		}
 
+	}
+	
+	public void exitActual()
+	{
+		if(noFriends)
+		{
+			PApplet.main("finalProject.Singleplayer");
+		}
 	}
 }
