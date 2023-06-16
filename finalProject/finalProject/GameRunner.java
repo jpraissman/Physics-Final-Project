@@ -1,7 +1,6 @@
 package finalProject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -14,7 +13,8 @@ public class GameRunner extends PApplet {
 	Player player;
 	
 	boolean mainScreen, addForce1, addForce2, 
-		addForce3, addForce4, simulating, joiningScreen, waitingScreen;
+		addForce3, addForce4, simulating, joiningScreen, 
+		waitingScreen, winningScreen, losingScreen;
 	
 	boolean mousePressed;
 	
@@ -31,14 +31,16 @@ public class GameRunner extends PApplet {
 	
 	int level = 1;
 	
-	String mapOne = "";
-	String mapTwo = "75x100x650x625";
-	String mapThree = "75x25x300x300/75x425x300x300/475x100x250x625";
-	String mapFour = "70x10x580x350/70x425x580x280";
-	String mapFive = "70x10x50x425/110x490x50x225";
-	String mapSix = "5x625x400x45/75x725x650x20/460x90x50x630";
-	String mapSeven = "5x625x690x45/650x90x20x520/725x90x20x400";
-	String mapEight = "70x65x75x670/205x5x75x685/335x55x275x680";
+	String map1 = "";
+	String map2 = "75x100x650x625";
+	String map3 = "75x25x300x300/75x425x300x300/475x100x250x625";
+	String map4 = "70x10x580x350/70x425x580x280";
+	String map5 = "70x10x50x425/110x490x50x225";
+	String map6 = "5x625x400x45/75x725x650x20/460x90x50x630";
+	String map7 = "5x625x690x45/650x90x20x520/725x90x20x400";
+	String map8 = "70x65x75x670/205x5x75x685/335x55x275x680";
+	
+	int map1Int, map2Int, map3Int;
 	
 	private final double deltaTime = 0.02;
 	
@@ -60,7 +62,7 @@ public class GameRunner extends PApplet {
 			
 		joiningScreen = true;
 		joinScreen = loadImage("assets/join.png");
-		
+
 		forceScreen = loadImage("assets/addForce.png");
 		winScreen = loadImage("assets/win.png");
 		loseScreen = loadImage("assets/lose.png");
@@ -70,9 +72,6 @@ public class GameRunner extends PApplet {
 		mainScreen = true;
 		
 		target = new Target(this, 660, 10, 75, 75);
-		
-		generateMap(mapSeven);
-		
 	}
 	
 	public void draw() {
@@ -88,9 +87,22 @@ public class GameRunner extends PApplet {
 			textSize(30);
 			fill(0);
 			text("Waiting Screen", 100, 100);
+			readServerData();
+		}
+		else if (winningScreen) {
+			textSize(30);
+			fill(0);
+			text("Winning Screen", 100, 100);
+		}
+		else if (losingScreen) {
+			textSize(30);
+			fill(0);
+			text("Losing", 100, 100);
 		}
 		else if (mainScreen) {
 			image(background, 0, 0);
+			
+			readServerData();
 			
 			target.drawSelf();
 			player.drawSelf();
@@ -129,11 +141,15 @@ public class GameRunner extends PApplet {
 				player.y += (player.ySpeed * deltaTime) + (0.5 * yAcc * deltaTime * deltaTime);
 				player.ySpeed += yAcc * deltaTime;
 				
-				System.out.println(player.ySpeed);
 				
-				if (time >= 60) {
-					simulating = false;
-				}
+				if (xAcc == 0 && Math.abs(player.xSpeed) < 0.25)
+					player.xSpeed = 0;
+				
+				if (yAcc == 0 && Math.abs(player.ySpeed) < 0.25)
+					player.ySpeed = 0;
+				
+				System.out.println("X speed: " + player.xSpeed);
+				System.out.println("Y speed: " + player.ySpeed);
 			}
 		}
 		else if (addForce1 || addForce2 || addForce3 || addForce4)
@@ -183,8 +199,8 @@ public class GameRunner extends PApplet {
 			if(ob.intersecting((int) player.x, (int) player.y, 
 					player.width, player.height)) {
 				reset();
-				generateMap(mapOne);
 				level = 1;
+				selectMap();
 			}
 		}
 		if (target.isInside((int) player.x, (int) player.y, 
@@ -192,12 +208,13 @@ public class GameRunner extends PApplet {
 				Math.abs(player.xSpeed) < 1 && Math.abs(player.ySpeed) < 1) {
 				reset();
 				level++;
-				if (level == 2)
-					generateMap(mapTwo);
-				if (level == 3)
-					generateMap(mapThree);
-				
-			}
+				if (level >= 4) {
+					winningScreen = true;
+					mainScreen = false;
+				}
+				else
+					selectMap();
+		}
 	}
 	
 	private void reset() {
@@ -245,6 +262,57 @@ public class GameRunner extends PApplet {
 		
 	}
 	
+	private void readServerData() {
+		String dataFromServer = myClient.readString();
+		if (dataFromServer != null) {
+			String[] dataFromServerSeperated = dataFromServer.split("\n");
+			if (waitingScreen) {
+				String[] allData = dataFromServerSeperated[0].split("@");
+				map1Int = Integer.parseInt(allData[0]);
+				map2Int = Integer.parseInt(allData[1]);
+				map3Int = Integer.parseInt(allData[2]);
+				mainScreen = true;
+				waitingScreen = false;
+				level = 1;
+				selectMap();
+			}
+			else if (mainScreen) {
+				if (dataFromServerSeperated[0].equals("Game Over")) {
+					mainScreen = false;
+					losingScreen = true;
+				}
+			}
+			
+		}
+	}
+	
+	private void selectMap() {
+		int mapNum = 0;
+		if (level == 1)
+			mapNum = map1Int;
+		else if (level == 2)
+			mapNum = map2Int;
+		else if (level == 3)
+			mapNum = map3Int;
+		
+		if (mapNum == 1)
+			generateMap(map1);
+		if (mapNum == 2)
+			generateMap(map2);
+		if (mapNum == 3)
+			generateMap(map3);
+		if (mapNum == 4)
+			generateMap(map4);
+		if (mapNum == 5)
+			generateMap(map5);
+		if (mapNum == 6)
+			generateMap(map6);
+		if (mapNum == 7)
+			generateMap(map7);
+		if (mapNum == 8)
+			generateMap(map8);
+	}
+	
 	private void generateMap(String input) {
 		String[] obsRaw = input.split("/");
 		
@@ -260,12 +328,14 @@ public class GameRunner extends PApplet {
 		}
 	}
 	
-	public void keyReleased()
-	{
-		System.out.println(keyCode);
+	public void keyReleased() {
+		//For Testing
+		if (keyCode == 81)
+			level = 3;
 		
-		if (joiningScreen)
-		{
+		
+		if (joiningScreen) {
+			System.out.println(keyCode);
 
 			if (keyCode == 32) {
 				joiningScreen = false;
