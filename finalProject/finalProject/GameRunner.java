@@ -251,6 +251,7 @@ public class GameRunner extends PApplet {
 	
 	public void keyReleased() {
 		if (joiningScreen) {
+			System.out.println(keyCode);
 			if (keyCode == 32) {
 				joiningScreen = false;
 				waitingScreen = true;
