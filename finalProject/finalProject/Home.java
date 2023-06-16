@@ -53,7 +53,7 @@ public class Home extends PApplet
 			{
 				if(mouseY < 375)
 				{
-					System.out.println("singlePlayer");
+					PApplet.main("finalProject.Singleplayer");
 					
 				}
 				else
