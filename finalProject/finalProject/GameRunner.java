@@ -136,14 +136,16 @@ public class GameRunner extends PApplet {
 				player.ySpeed += yAcc * deltaTime;
 				
 				
-				if (xAcc == 0 && Math.abs(player.xSpeed) < 0.25)
+				if (xAcc == 0 && Math.abs(player.xSpeed) < 2)
 					player.xSpeed = 0;
 				
-				if (yAcc == 0 && Math.abs(player.ySpeed) < 0.25)
+				if (yAcc == 0 && Math.abs(player.ySpeed) < 2)
 					player.ySpeed = 0;
 				
 				System.out.println("X speed: " + player.xSpeed);
 				System.out.println("Y speed: " + player.ySpeed);
+				System.out.println("X pos: " + player.x);
+				System.out.println("Y pos: " + player.y);
 			}
 		}
 		else if (addForce1 || addForce2 || addForce3 || addForce4)
@@ -152,20 +154,20 @@ public class GameRunner extends PApplet {
 			if (addForce1) {
 				fill(0);
 				textSize(30);
-				text(whatUserTyped, 400, 250);
+				text(whatUserTyped + "|", 400, 250);
 			}
 			else if (addForce2) {
 				fill(0);
 				textSize(30);
 				text(forceToAdd.getMagnitude()+"", 400, 250);
-				text(whatUserTyped, 400, 360);
+				text(whatUserTyped + "|", 400, 360);
 			}
 			else if (addForce3) {
 				fill(0);
 				textSize(30);
 				text(forceToAdd.getMagnitude()+"", 400, 250);
 				text(forceToAdd.getStart()+"", 400, 360);
-				text(whatUserTyped, 400, 470);
+				text(whatUserTyped + "|", 400, 470);
 			}
 			else if (addForce4) {
 				fill(0);
@@ -173,7 +175,7 @@ public class GameRunner extends PApplet {
 				text(forceToAdd.getMagnitude()+"", 400, 250);
 				text(forceToAdd.getStart()+"", 400, 360);
 				text(forceToAdd.getEnd()+"", 400, 470);
-				text(whatUserTyped, 400, 580);
+				text(whatUserTyped + "|", 400, 580);
 			}
 		}
 		
@@ -191,11 +193,14 @@ public class GameRunner extends PApplet {
 	private void checkCollisions() {
 		for (Obstacle ob : obs) {
 			if(ob.intersecting((int) player.x, (int) player.y, 
-					player.width, player.height) || player.x < 0 || player.x > 700 || player.y < 0 || player.y > 700) {
+					player.width, player.height)) {
 				reset();
-				level = 1;
 				selectMap();
 			}
+		}
+		if(player.x < 0 || player.x > 700 || player.y < 0 || player.y > 700) {
+			reset();
+			selectMap();
 		}
 		if (target.isInside((int) player.x, (int) player.y, 
 					player.width, player.height) && 
@@ -326,6 +331,7 @@ public class GameRunner extends PApplet {
 	}
 	
 	public void keyReleased() {
+		
 		if (joiningScreen) {
 			System.out.println(keyCode);
 
@@ -363,10 +369,16 @@ public class GameRunner extends PApplet {
 			if (keyCode == 10)
 			{
 				if (addForce1) {
-					addForce1 = false;
-					addForce2 = true;
-					forceToAdd.magnitude = Double.parseDouble(whatUserTyped);
-					whatUserTyped = "";
+					if (Double.parseDouble(whatUserTyped) <= 20) {
+						addForce1 = false;
+						addForce2 = true;
+						forceToAdd.magnitude = Double.parseDouble(whatUserTyped);
+						whatUserTyped = "";
+					}
+					else {
+						whatUserTyped = "";
+					}
+					
 				}
 				else if (addForce2) {
 					addForce2 = false;
